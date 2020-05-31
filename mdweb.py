@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 
-import os
 import argparse
 import glob
+import os
+import platform
 
 
 def convert_extension_md_to_html(path_to_markdown_file):
@@ -38,7 +39,12 @@ def convert_markdown_to_html(path_to_markdown, path_to_html, header=None, footer
     # make body
     os.system("markdown {} >> {}".format(path_to_markdown, path_to_html))
     # fix links between markdown files
-    os.system("sed -i 's/.md/.html/g' {}".format(path_to_html))
+    if platform.system() == 'Darwin':
+        # macOS
+        os.system("sed -i '' 's/.md/.html/g' {}".format(path_to_html))
+    else:
+        # Linux
+        os.system("sed -i 's/.md/.html/g' {}".format(path_to_html))
     # make footer
     if footer is not None:
         os.system("cat {} >> {}".format(footer, path_to_html))
