@@ -32,7 +32,7 @@ def convert_markdown_to_html(path_to_markdown, path_to_html, header=None, footer
     """
     Converts a single markdown file to a single html file.
     """
-    os.system("echo -n '' > {}".format(path_to_html))
+    os.system("touch {}".format(path_to_html))
     # make header
     if header is not None:
         os.system("cat {} >> {}".format(header, path_to_html))
