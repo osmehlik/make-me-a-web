@@ -16,3 +16,7 @@ Conversion is done using original markdown program.
 
 - `*.md` files in src_dir are converted to `*.html` files in dst_dir
 - non *.md files in src_dir are copied to dst_dir unchanged
+
+## Requirements
+
+python3 and libs in requirements.txt

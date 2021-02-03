@@ -2,6 +2,7 @@
 
 
 import argparse
+import markdown
 import glob
 import os
 import platform
@@ -32,23 +33,22 @@ def convert_markdown_to_html(path_to_markdown, path_to_html, header=None, footer
     """
     Converts a single markdown file to a single html file.
     """
-    os.system("touch {}".format(path_to_html))
-    # make header
-    if header is not None:
-        os.system("cat {} >> {}".format(header, path_to_html))
-    # make body
-    os.system("markdown {} >> {}".format(path_to_markdown, path_to_html))
-    # fix links between markdown files
-    if platform.system() == 'Darwin':
-        # macOS
-        os.system("sed -i '' 's/.md/.html/g' {}".format(path_to_html))
-    else:
-        # Linux
-        os.system("sed -i 's/.md/.html/g' {}".format(path_to_html))
-    # make footer
-    if footer is not None:
-        os.system("cat {} >> {}".format(footer, path_to_html))
-    
+    with open(path_to_html, "w") as out:
+        # make header
+        if header is not None:
+            with open(header, "r") as in_header:
+                out.write(in_header.read())
+        # make body
+        with open(path_to_markdown, "r") as in_body:
+            converted = markdown.markdown(in_body.read())
+            # fix links between markdown files
+            converted = converted.replace(".md", ".html")
+            out.write(converted)
+        # make footer
+        if footer is not None:
+            with open(footer, "r") as in_footer:
+                out.write(in_footer.read())
+
 
 def convert_dir(src_dir, dst_dir, header=None, footer=None):
     paths = directory_contents(src_dir)
