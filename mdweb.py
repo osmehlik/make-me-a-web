@@ -40,7 +40,8 @@ def convert_markdown_to_html(path_to_markdown, path_to_html, header=None, footer
                 out.write(in_header.read())
         # make body
         with open(path_to_markdown, "r") as in_body:
-            converted = markdown.markdown(in_body.read())
+            extensions = ['fenced_code', 'codehilite']
+            converted = markdown.markdown(in_body.read(), extensions=extensions)
             # fix links between markdown files
             converted = converted.replace(".md", ".html")
             out.write(converted)
