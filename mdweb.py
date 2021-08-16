@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 
 
+from jinja2 import Environment, FileSystemLoader
 import argparse
 import markdown
 import glob
 import os
 import platform
+
+
+env = Environment(
+    loader=FileSystemLoader('templates')
+)
+
+template = env.get_template('base.html')
 
 
 def convert_extension_md_to_html(path_to_markdown_file):
@@ -29,29 +37,26 @@ def directory_contents(path_to_dir):
     return files
 
 
-def convert_markdown_to_html(path_to_markdown, path_to_html, header=None, footer=None):
+def convert_markdown_str_to_html(markdown_str):
+    extensions = ['fenced_code', 'codehilite']
+    converted = markdown.markdown(markdown_str, extensions=extensions)
+    # fix links between markdown files
+    converted = converted.replace(".md", ".html")
+    return converted
+
+
+def convert_markdown_to_html(path_to_markdown, path_to_html):
     """
     Converts a single markdown file to a single html file.
     """
     with open(path_to_html, "w") as out:
-        # make header
-        if header is not None:
-            with open(header, "r") as in_header:
-                out.write(in_header.read())
-        # make body
         with open(path_to_markdown, "r") as in_body:
-            extensions = ['fenced_code', 'codehilite']
-            converted = markdown.markdown(in_body.read(), extensions=extensions)
-            # fix links between markdown files
-            converted = converted.replace(".md", ".html")
-            out.write(converted)
-        # make footer
-        if footer is not None:
-            with open(footer, "r") as in_footer:
-                out.write(in_footer.read())
+            content = convert_markdown_str_to_html(in_body.read())
+            rendered = template.render(title="nejaky titulek", content=content)
+            out.write(rendered)
 
 
-def convert_dir(src_dir, dst_dir, header=None, footer=None):
+def convert_dir(src_dir, dst_dir):
     paths = directory_contents(src_dir)
     # create target directories first
     os.makedirs(dst_dir)
@@ -67,7 +72,7 @@ def convert_dir(src_dir, dst_dir, header=None, footer=None):
             continue
         if src_file_path.endswith(".md"):
             dst_file_path = convert_extension_md_to_html(dst_file_path)
-            convert_markdown_to_html(src_file_path, dst_file_path, header=header, footer=footer)
+            convert_markdown_to_html(src_file_path, dst_file_path)
         else:
             os.system("cp {} {}".format(src_file_path, dst_file_path))
 
@@ -75,10 +80,8 @@ def main():
     parser = argparse.ArgumentParser(description="markdown to web convertor")
     parser.add_argument("src_dir", help="path to source directory")
     parser.add_argument("dst_dir", help="path to destination directory")
-    parser.add_argument("--header", help="path to html file to prepend to each generated html")
-    parser.add_argument("--footer", help="path to html file to append to each generated html")
     args = parser.parse_args()
-    convert_dir(args.src_dir, args.dst_dir, header=args.header, footer=args.footer)
+    convert_dir(args.src_dir, args.dst_dir)
 
 
 if __name__ == "__main__":
