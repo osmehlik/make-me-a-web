@@ -10,7 +10,7 @@ and any other files
 **output** is a directory containing `*.html` files, folders
 and any other files
 
-Conversion is done using original markdown program.
+Conversion is done using markdown python library.
 
 ## How It Works
 
