@@ -1,6 +1,5 @@
 
-# mdweb
-
+# tehwebz
 
 A static website generator written in Python.
 
