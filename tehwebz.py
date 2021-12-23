@@ -8,6 +8,7 @@ import markdown
 import os
 import platform
 import re
+import shutil
 
 
 env = Environment(
@@ -79,7 +80,7 @@ def convert_dir(src_dir, dst_dir):
             dst_file_path = convert_extension_md_to_html(dst_file_path)
             convert_markdown_to_html(src_file_path, dst_file_path)
         else:
-            os.system("cp {} {}".format(src_file_path, dst_file_path))
+            shutil.copy(src_file_path, dst_file_path)
 
 def main():
     parser = argparse.ArgumentParser(description="markdown to web convertor")
