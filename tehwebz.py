@@ -7,6 +7,7 @@ import glob
 import markdown
 import os
 import platform
+import re
 
 
 env = Environment(
@@ -21,7 +22,11 @@ def convert_extension_md_to_html(path_to_markdown_file):
     Convert path to markdown file to path to html file.
     """
     if path_to_markdown_file.endswith(".md"):
-        return path_to_markdown_file.replace(".md", ".html")
+        return re.sub(path_to_markdown_file.replace(
+            "md$",
+            "html",
+            path_to_markdown_file
+        )
     else:
         return path_to_markdown_file
 
