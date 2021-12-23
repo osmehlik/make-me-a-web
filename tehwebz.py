@@ -3,8 +3,8 @@
 
 from jinja2 import Environment, FileSystemLoader
 import argparse
-import markdown
 import glob
+import markdown
 import os
 import platform
 
