@@ -1,5 +1,5 @@
 
-# tehwebz
+# make-me-a-web
 
 A static website generator written in Python.
 
